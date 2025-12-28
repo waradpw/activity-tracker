@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Habits Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --color-primary: #2563eb;
+            --color-bg: #f8f9fa;
+            --color-surface: #ffffff;
+            --color-text: #1a1a1a;
+            --color-border: #e0e0e0;
+            --color-success: #10b981;
+            --color-light-blue: #dbeafe;
+            --color-warning: #f59e0b;
+            --color-danger: #ef4444;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            display: flex;
+            gap: 0;
+            background: var(--color-surface);
+            border-bottom: 2px solid var(--color-border);
+            margin-bottom: 20px;
+            border-radius: 16px 16px 0 0;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            font-weight: 600;
+            cursor: pointer;
+            background: var(--color-light-blue);
+            color: var(--color-primary);
+            border: none;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .nav-tab:hover {
+            background: #bfdbfe;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #1d4ed8 100%);
+            color: white;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Yearly Tracker Grid */
+        .yearly-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 2000px;
+            margin: 0 auto;
+        }
+
+        .week-card {
+            background: linear-gradient(135deg, var(--color-surface) 0%, rgba(37, 99, 235, 0.02) 100%);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(37, 99, 235, 0.1);
+        }
+
+        .week-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .week-card.excellent {
+            border-color: rgba(16, 185, 129, 0.3);
+            background: linear-gradient(135deg, var(--color-surface) 0%, rgba(16, 185, 129, 0.05) 100%);
+        }
+
+        .week-card.good {
+            border-color: rgba(59, 130, 246, 0.3);
+            background: linear-gradient(135deg, var(--color-surface) 0%, rgba(59, 130, 246, 0.05) 100%);
+        }
+
+        .week-card.fair {
+            border-color: rgba(245, 158, 11, 0.3);
+            background: linear-gradient(135deg, var(--color-surface) 0%, rgba(245, 158, 11, 0.05) 100%);
+        }
+
+        .week-card.poor {
+            border-color: rgba(239, 68, 68, 0.3);
+            background: linear-gradient(135deg, var(--color-surface) 0%, rgba(239, 68, 68, 0.05) 100%);
+        }
+
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .week-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        .week-month {
+            font-size: 12px;
+            color: #999;
+            font-weight: 500;
+        }
+
+        .week-date-range {
+            font-size: 12px;
+            color: #666;
+            margin: 8px 0;
+            line-height: 1.4;
+        }
+
+        .week-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 8px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #10b981);
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 4px;
+        }
+
+        .week-percentage {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--color-primary) 0%, #1d4ed8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(37, 99, 235, 0.08);
+            border-radius: 12px;
+        }
+
+        .yearly-header {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--color-surface) 0%, rgba(37, 99, 235, 0.03) 100%);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(37, 99, 235, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .yearly-header h2 {
+            font-size: 28px;
+            margin: 0 0 10px 0;
+            color: var(--color-text);
+            background: linear-gradient(135deg, var(--color-primary) 0%, #1d4ed8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .yearly-header p {
+            font-size: 14px;
+            color: #666;
+            margin: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            padding: 20px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 300px 1fr 1fr;
+            gap: 20px;
+            max-width: 2000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            grid-column: 1 / -1;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .header p {
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Left Panel - Daily Habits */
+        .habits-panel {
+            background: linear-gradient(135deg, var(--color-surface) 0%, rgba(37, 99, 235, 0.02) 100%);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            max-height: 600px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(37, 99, 235, 0.1);
+        }
+
+        .habits-panel h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--color-text);
+            background: linear-gradient(135deg, var(--color-primary) 0%, #1d4ed8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .habits-list-container {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+
+        .habit-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            transition: all 0.2s;
+            font-size: 13px;
+            position: relative;
+            user-select: none;
+            gap: 10px;
+            border: 1px solid transparent;
+        }
+
+        .habit-item:hover {
+            background: #f0f1f3;
+            border-color: rgba(37, 99, 235, 0.1);
+        }
+
+        .habit-name {
+            flex: 1;
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        .habit-delete-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .habit-delete-btn:hover {
+            background: #ee5a6f;
+        }
+
+        /* Middle Panel - Weekly Tracking Grid */
+        .tracking-grid-panel {
+            background: linear-gradient(135deg, var(--color-surface) 0%, rgba(37, 99, 235, 0.02) 100%);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            overflow-x: auto;
+            border: 1px solid rgba(37, 99, 235, 0.1);
+        }
+
+        .tracking-grid-panel h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--color-text);
+            background: linear-gradient(135deg, var(--color-primary) 0%, #1d4ed8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .weeks-container {
+            display: flex;
+            gap: 30px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .week {
+            flex: 0 0 auto;
+            min-width: 350px;
+        }
+
+        .week-header-table {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .week-dates-header {
+            font-size: 11px;
+            color: #999;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: 0;
+            margin-top: 3px;
+        }
+
+        .tracking-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .tracking-table thead {
+            background: linear-gradient(180deg, rgba(37, 99, 235, 0.1) 0%, transparent 100%);
+        }
+
+        .tracking-table th {
+            padding: 10px 4px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--color-text);
+            border-bottom: 2px solid rgba(37, 99, 235, 0.2);
+            font-size: 11px;
+        }
+
+        .tracking-table td {
+            padding: 8px 4px;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .habit-row-label {
+            text-align: left;
+            padding-left: 8px;
+            font-weight: 500;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--color-success);
+        }
+
+        /* Right Panel - Analytics */
+        .analytics-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .chart-card {
+            background: linear-gradient(135deg, var(--color-surface) 0%, rgba(37, 99, 235, 0.02) 100%);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(37, 99, 235, 0.1);
+        }
+
+        .chart-card h3 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--color-text);
+            background: linear-gradient(135deg, var(--color-primary) 0%, #1d4ed8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 280px;
+            background: linear-gradient(180deg, rgba(37, 99, 235, 0.05) 0%, transparent 100%);
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .progress-card {
+            background: linear-gradient(135deg, var(--color-surface) 0%, rgba(16, 185, 129, 0.02) 100%);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .progress-card h3 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--color-text);
+            background: linear-gradient(135deg, var(--color-success) 0%, #059669 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .top-habit {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            font-size: 13px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .top-habit:hover {
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .top-habit:last-child {
+            border-bottom: none;
+        }
+
+        .habit-rank {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #1d4ed8 100%);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 12px;
+            font-size: 12px;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .habit-name-progress {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .habit-completion {
+            color: var(--color-primary);
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .button-group-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-icon {
+            padding: 8px 12px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #1d4ed8 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--color-light-blue) 0%, rgba(37, 99, 235, 0.1) 100%);
+            color: var(--color-primary);
+            border: 1px solid rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #bfdbfe 0%, rgba(37, 99, 235, 0.15) 100%);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--color-text);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 10px 12px;
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            border-radius: 10px;
+            font-size: 13px;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--color-surface);
+            border-radius: 16px;
+            padding: 25px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(37, 99, 235, 0.1);
+        }
+
+        .modal-header {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--color-text);
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--color-text);
+        }
+
+        /* Toast Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 20px;
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            z-index: 2000;
+            animation: slideIn 0.3s ease, slideOut 0.3s ease 2.7s forwards;
+            max-width: 300px;
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #ff4757 0%, #ee5a6f 100%);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 1400px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .weeks-container {
+                flex-wrap: wrap;
+            }
+
+            .week {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .habits-panel {
+                max-height: 300px;
+            }
+
+            .chart-card {
+                padding: 15px;
+            }
+
+            .chart-container {
+                height: 200px;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #999;
+        }
+
+        .yearly-chart-card {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, var(--color-surface) 0%, rgba(37, 99, 235, 0.02) 100%);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(37, 99, 235, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .yearly-chart-card h3 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--color-text);
+            background: linear-gradient(135deg, var(--color-primary) 0%, #1d4ed8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .yearly-chart-container {
+            position: relative;
+            height: 350px;
+            background: linear-gradient(180deg, rgba(37, 99, 235, 0.05) 0%, transparent 100%);
+            border-radius: 12px;
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <button class="nav-tab active" onclick="switchPage('daily')">📊 Daily Tracker</button>
+        <button class="nav-tab" onclick="switchPage('yearly')">📈 Weekly Reports</button>
+    </div>
+
+    <!-- Daily Tracker Page -->
+    <div id="daily" class="page active">
+        <div class="container">
+            <div class="header">
+                <h1>Daily Habits Tracker</h1>
+                <p>Track your daily habits and monitor weekly progress with detailed analytics</p>
+            </div>
+
+        <!-- Left Panel - Daily Habits List -->
+        <div class="habits-panel">
+            <h2>Daily Habits</h2>
+            <div class="habits-list-container" id="habitsList"></div>
+            <div class="button-group-vertical">
+                <button class="btn btn-primary btn-icon" onclick="openAddHabitModal()">+ Add Habit</button>
+                <button class="btn btn-secondary btn-icon" onclick="openAddWeekModal()">📅 Add Week</button>
+            </div>
+        </div>
+
+        <!-- Middle Panel - Weekly Tracking Grid -->
+        <div class="tracking-grid-panel">
+            <h2>Weekly Tracking</h2>
+            <div class="weeks-container" id="weeksContainer"></div>
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="previousWeek()">← Previous Week</button>
+                <button class="btn btn-secondary" onclick="nextWeek()">Next Week →</button>
+                <span style="align-self: center; color: #666; font-size: 12px; margin-left: 10px;" id="weekCountDisplay">Total Weeks: 5</span>
+            </div>
+        </div>
+
+        <!-- Right Panel - Analytics -->
+        <div class="analytics-panel">
+            <div class="chart-card">
+                <h3>📈 Weekly Progress Trend</h3>
+                <div class="chart-container">
+                    <canvas id="weeklyAreaChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>📊 Weekly Completion Rates</h3>
+                <div class="chart-container">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+
+            <div class="progress-card">
+                <h3>🏆 Top 10 Daily Habits</h3>
+                <div id="topHabits"></div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Weekly Reports Page -->
+    <div id="yearly" class="page">
+        <div class="yearly-header">
+            <h2>📊 Weekly Progress Reports</h2>
+            <p>Track your weekly completion rates and habit performance</p>
+        </div>
+
+        <div style="grid-column: 1 / -1; max-width: 2000px; margin: 0 auto 20px; width: 100%;">
+            <div class="yearly-chart-card">
+                <h3>📈 Weekly Trend Analysis</h3>
+                <div class="yearly-chart-container">
+                    <canvas id="weeklyTrendChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="yearly-container" id="yearlyContainer"></div>
+    </div>
+
+    <!-- Add Habit Modal -->
+    <div class="modal" id="addHabitModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeAddHabitModal()">&times;</span>
+            <div class="modal-header">Add New Habit</div>
+            <div class="form-group">
+                <label>Habit Name</label>
+                <input type="text" id="habitNameInput" placeholder="e.g., Wake up at 6AM">
+            </div>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="addHabit(); return false;">Add Habit</button>
+                <button class="btn btn-secondary" onclick="closeAddHabitModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Week Modal -->
+    <div class="modal" id="addWeekModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeAddWeekModal()">&times;</span>
+            <div class="modal-header">Add New Week</div>
+            <p style="font-size: 13px; color: #666; margin-bottom: 15px;">All habits will start unchecked for the new week.</p>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="addWeek()">Add Week</button>
+                <button class="btn btn-secondary" onclick="closeAddWeekModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Habit Modal -->
+    <div class="modal" id="editHabitModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeEditHabitModal()">&times;</span>
+            <div class="modal-header">Edit Habit</div>
+            <div class="form-group">
+                <label>Habit Name</label>
+                <input type="text" id="editHabitNameInput" placeholder="e.g., Wake up at 6AM">
+            </div>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="saveEditedHabit(); return false;">Save Changes</button>
+                <button class="btn btn-secondary" onclick="closeEditHabitModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data structure
+        let habits = [
+            { id: 1, name: 'Wake up at 6AM' },
+            { id: 2, name: 'No Snooping' },
+            { id: 3, name: 'Drink 3L Water' },
+            { id: 4, name: 'Gym Workout' },
+            { id: 5, name: 'Stretching' },
+            { id: 6, name: 'Read 10 Pages' },
+            { id: 7, name: 'Meditation' },
+            { id: 8, name: 'Study 1 Hour' },
+            { id: 9, name: 'Skincare Routine' },
+            { id: 10, name: 'Limit Social Media' },
+            { id: 11, name: 'No Alcohol' },
+            { id: 12, name: 'Track Expenses' }
+        ];
+
+        // Tracking data: week -> day -> habit -> completed
+        let trackingData = {};
+        let totalWeeks = 5;
+        let weekDates = {};
+        let weeklyAreaChart, barChart, weeklyTrendChart;
+
+        // Initialize tracking data
+        function initializeTrackingData() {
+            const weeks = totalWeeks;
+            const days = 7;
+            for (let w = 1; w <= weeks; w++) {
+                if (!trackingData[w]) {
+                    trackingData[w] = {};
+                    for (let d = 1; d <= days; d++) {
+                        trackingData[w][d] = {};
+                        habits.forEach(habit => {
+                            trackingData[w][d][habit.id] = false;
+                        });
+                    }
+                }
+            }
+        }
+
+        let currentWeekStart = 1;
+
+        // Render habits list
+        function renderHabits() {
+            const habitsList = document.getElementById('habitsList');
+            if (habits.length === 0) {
+                habitsList.innerHTML = '<div style="padding: 10px; color: #999; text-align: center;">No habits yet</div>';
+            } else {
+                habitsList.innerHTML = habits.map(habit => {
+                    const escapedName = habit.name.replace(/'/g, "\\'");
+                    return `
+                    <div class="habit-item">
+                        <span class="habit-name">${habit.name}</span>
+                        <button class="habit-delete-btn" style="background: #3498db;" onclick="openEditHabitModal(${habit.id}, '${escapedName}')">✏️</button>
+                        <button class="habit-delete-btn" onclick="deleteHabit(${habit.id}, '${escapedName}')">🗑️</button>
+                    </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // Render weeks
+        function renderWeeks() {
+            const weeksContainer = document.getElementById('weeksContainer');
+            weeksContainer.innerHTML = '';
+            document.getElementById('weekCountDisplay').textContent = `Total Weeks: ${totalWeeks}`;
+
+            for (let w = currentWeekStart; w < currentWeekStart + 3 && w <= totalWeeks; w++) {
+                const weekDiv = document.createElement('div');
+                weekDiv.className = 'week';
+                const dayNames = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+
+                let tableHTML = `
+                    <div class="week-header-table">Week ${w}<div class="week-dates-header">${getDateRange(w)}</div></div>
+                    <table class="tracking-table">
+                        <thead>
+                            <tr>
+                                <th>Habits</th>
+                                ${dayNames.map(day => `<th>${day}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                habits.forEach(habit => {
+                    tableHTML += '<tr>';
+                    tableHTML += `<td class="habit-row-label">${habit.name}</td>`;
+                    for (let d = 1; d <= 7; d++) {
+                        const isCompleted = trackingData[w][d][habit.id];
+                        tableHTML += `
+                            <td>
+                                <input type="checkbox" class="checkbox" ${isCompleted ? 'checked' : ''} 
+                                    onchange="toggleTracking(${w}, ${d}, ${habit.id})">
+                            </td>
+                        `;
+                    }
+                    tableHTML += '</tr>';
+                });
+
+                tableHTML += `
+                        </tbody>
+                    </table>
+                `;
+
+                weekDiv.innerHTML = tableHTML;
+                weeksContainer.appendChild(weekDiv);
+            }
+        }
+
+        // Toggle tracking checkbox
+        function toggleTracking(week, day, habitId) {
+            trackingData[week][day][habitId] = !trackingData[week][day][habitId];
+            updateCharts();
+            renderTopHabits();
+            saveToDatabase();
+        }
+
+        // Week navigation
+        function previousWeek() {
+            if (currentWeekStart > 1) {
+                currentWeekStart--;
+                renderWeeks();
+            }
+        }
+
+        function nextWeek() {
+            if (currentWeekStart < totalWeeks - 2) {
+                currentWeekStart++;
+                renderWeeks();
+            }
+        }
+
+        // Add new week
+        function addWeek() {
+            totalWeeks++;
+            const weeks = totalWeeks;
+            const days = 7;
+            
+            trackingData[weeks] = {};
+            for (let d = 1; d <= days; d++) {
+                trackingData[weeks][d] = {};
+                habits.forEach(habit => {
+                    trackingData[weeks][d][habit.id] = false;
+                });
+            }
+            
+            initializeWeekDates();
+            renderWeeks();
+            updateCharts();
+            renderTopHabits();
+            closeAddWeekModal();
+            saveToDatabase();
+            showNotification(`✓ Week ${weeks} added (${getDateRange(weeks)})!`, 'success');
+        }
+
+        // Calculate completion rates per week
+        function getWeeklyCompletionRates() {
+            const rates = [];
+            for (let w = 1; w <= totalWeeks; w++) {
+                let completed = 0;
+                let total = 0;
+                for (let d = 1; d <= 7; d++) {
+                    habits.forEach(habit => {
+                        total++;
+                        if (trackingData[w][d][habit.id]) {
+                            completed++;
+                        }
+                    });
+                }
+                rates.push(Math.round((completed / total) * 100));
+            }
+            return rates;
+        }
+
+        // Calculate top habits
+        function getTopHabits() {
+            const habitScores = {};
+            habits.forEach(habit => {
+                habitScores[habit.id] = { name: habit.name, completed: 0, total: 0 };
+            });
+
+            for (let w = 1; w <= totalWeeks; w++) {
+                for (let d = 1; d <= 7; d++) {
+                    habits.forEach(habit => {
+                        habitScores[habit.id].total++;
+                        if (trackingData[w][d][habit.id]) {
+                            habitScores[habit.id].completed++;
+                        }
+                    });
+                }
+            }
+
+            return Object.values(habitScores)
+                .map(h => ({
+                    ...h,
+                    percentage: h.total > 0 ? Math.round((h.completed / h.total) * 100) : 0
+                }))
+                .sort((a, b) => b.percentage - a.percentage)
+                .slice(0, 10);
+        }
+
+        // Render top habits
+        function renderTopHabits() {
+            const topHabits = getTopHabits();
+            const topHabitsDiv = document.getElementById('topHabits');
+            topHabitsDiv.innerHTML = topHabits.map((habit, index) => `
+                <div class="top-habit">
+                    <span class="habit-rank">${index + 1}</span>
+                    <span class="habit-name-progress">${habit.name}</span>
+                    <span class="habit-completion">${habit.percentage}%</span>
+                </div>
+            `).join('');
+        }
+
+        // Update charts
+        function updateCharts() {
+            const weeklyRates = getWeeklyCompletionRates();
+
+            // Weekly Area Chart
+            if (weeklyAreaChart) weeklyAreaChart.destroy();
+            const weeklyCtx = document.getElementById('weeklyAreaChart').getContext('2d');
+            const weekLabels = Array.from({length: totalWeeks}, (_, i) => `W${i + 1}`);
+            
+            const gradient = weeklyCtx.createLinearGradient(0, 0, 0, 280);
+            gradient.addColorStop(0, 'rgba(37, 99, 235, 0.3)');
+            gradient.addColorStop(1, 'rgba(37, 99, 235, 0)');
+            
+            weeklyAreaChart = new Chart(weeklyCtx, {
+                type: 'line',
+                data: {
+                    labels: weekLabels,
+                    datasets: [{
+                        label: 'Completion Rate %',
+                        data: weeklyRates,
+                        borderColor: '#2563eb',
+                        backgroundColor: gradient,
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#2563eb',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        filler: { propagate: true }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            ticks: { callback: v => v + '%' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // Bar Chart
+            if (barChart) barChart.destroy();
+            const barCtx = document.getElementById('barChart').getContext('2d');
+            const barLabels = Array.from({length: totalWeeks}, (_, i) => `W${i + 1}`);
+            barChart = new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: barLabels,
+                    datasets: [{
+                        label: 'Completion Rate %',
+                        data: weeklyRates,
+                        backgroundColor: 'rgba(37, 99, 235, 0.8)',
+                        borderRadius: 8,
+                        borderSkipped: false,
+                        borderColor: 'rgba(37, 99, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            ticks: { callback: v => v + '%' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Render weekly trend chart
+        function renderWeeklyTrendChart() {
+            const weeklyRates = getWeeklyCompletionRates();
+            
+            if (weeklyTrendChart) weeklyTrendChart.destroy();
+            const ctx = document.getElementById('weeklyTrendChart').getContext('2d');
+            
+            const labels = Array.from({length: totalWeeks}, (_, i) => `Week ${i + 1}`);
+            
+            const gradient = ctx.createLinearGradient(0, 0, 0, 350);
+            gradient.addColorStop(0, 'rgba(37, 99, 235, 0.3)');
+            gradient.addColorStop(0.5, 'rgba(16, 185, 129, 0.2)');
+            gradient.addColorStop(1, 'rgba(37, 99, 235, 0)');
+            
+            weeklyTrendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Weekly Completion %',
+                        data: weeklyRates,
+                        borderColor: '#2563eb',
+                        backgroundColor: gradient,
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointBackgroundColor: '#2563eb',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 8,
+                        pointHoverBackgroundColor: '#1d4ed8'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 13 },
+                            cornerRadius: 8
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            ticks: { callback: v => v + '%' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Modal functions
+        function openAddHabitModal() {
+            document.getElementById('addHabitModal').classList.add('active');
+        }
+
+        function closeAddHabitModal() {
+            document.getElementById('addHabitModal').classList.remove('active');
+            document.getElementById('habitNameInput').value = '';
+        }
+
+        function addHabit() {
+            const name = document.getElementById('habitNameInput').value.trim();
+
+            if (!name) {
+                showNotification('Please enter a habit name', 'error');
+                return;
+            }
+
+            const newId = habits.length > 0 ? Math.max(...habits.map(h => h.id)) + 1 : 1;
+            habits.push({ id: newId, name });
+
+            for (let w = 1; w <= totalWeeks; w++) {
+                for (let d = 1; d <= 7; d++) {
+                    if (!trackingData[w]) trackingData[w] = {};
+                    if (!trackingData[w][d]) trackingData[w][d] = {};
+                    trackingData[w][d][newId] = false;
+                }
+            }
+
+            renderHabits();
+            renderWeeks();
+            updateCharts();
+            renderTopHabits();
+            closeAddHabitModal();
+            saveToDatabase();
+            showNotification(`✓ "${name}" added!`, 'success');
+        }
+
+        // Delete habit with confirmation
+        function deleteHabit(habitId, habitName) {
+            const displayName = habitName.replace(/\\'/g, "'");
+            
+            if (confirm(`Are you sure you want to delete "${displayName}"?`)) {
+                habits = habits.filter(h => h.id !== habitId);
+                
+                for (let w = 1; w <= totalWeeks; w++) {
+                    if (trackingData[w]) {
+                        for (let d = 1; d <= 7; d++) {
+                            if (trackingData[w][d] && trackingData[w][d][habitId]) {
+                                delete trackingData[w][d][habitId];
+                            }
+                        }
+                    }
+                }
+                
+                renderHabits();
+                renderWeeks();
+                updateCharts();
+                renderTopHabits();
+                saveToDatabase();
+                showNotification(`✓ "${displayName}" deleted!`, 'success');
+            }
+        }
+
+        // Edit habit modal functions
+        let editingHabitId = null;
+
+        function openEditHabitModal(habitId, habitName) {
+            editingHabitId = habitId;
+            document.getElementById('editHabitNameInput').value = habitName;
+            document.getElementById('editHabitModal').classList.add('active');
+            document.getElementById('editHabitNameInput').focus();
+        }
+
+        function closeEditHabitModal() {
+            document.getElementById('editHabitModal').classList.remove('active');
+            editingHabitId = null;
+            document.getElementById('editHabitNameInput').value = '';
+        }
+
+        function saveEditedHabit() {
+            const newName = document.getElementById('editHabitNameInput').value.trim();
+
+            if (!newName) {
+                showNotification('Please enter a habit name', 'error');
+                return;
+            }
+
+            const habit = habits.find(h => h.id === editingHabitId);
+            if (habit) {
+                const oldName = habit.name;
+                habit.name = newName;
+                
+                renderHabits();
+                renderWeeks();
+                updateCharts();
+                renderTopHabits();
+                closeEditHabitModal();
+                saveToDatabase();
+                showNotification(`✓ "${oldName}" → "${newName}"!`, 'success');
+            }
+        }
+
+        // Modal functions for Add Week
+        function openAddWeekModal() {
+            document.getElementById('addWeekModal').classList.add('active');
+        }
+
+        function closeAddWeekModal() {
+            document.getElementById('addWeekModal').classList.remove('active');
+        }
+
+        // Show notification toast
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            if (document.body) {
+                document.body.appendChild(notification);
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 3000);
+            }
+        }
+
+        // IndexedDB Setup for Persistent Storage
+        const DB_NAME = 'HabitsTrackerDB';
+        const DB_VERSION = 1;
+        let db;
+
+        // Initialize IndexedDB
+        function initializeDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+                
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    db = request.result;
+                    resolve(db);
+                };
+                
+                request.onupgradeneeded = (event) => {
+                    db = event.target.result;
+                    
+                    if (!db.objectStoreNames.contains('habits')) {
+                        db.createObjectStore('habits', { keyPath: 'id' });
+                    }
+                    if (!db.objectStoreNames.contains('trackingData')) {
+                        db.createObjectStore('trackingData', { keyPath: 'id', autoIncrement: true });
+                    }
+                    if (!db.objectStoreNames.contains('metadata')) {
+                        db.createObjectStore('metadata', { keyPath: 'key' });
+                    }
+                };
+            });
+        }
+
+        // Save data to IndexedDB
+        function saveToDatabase() {
+            if (!db) return;
+            
+            const transaction = db.transaction(['habits', 'trackingData', 'metadata'], 'readwrite');
+            
+            const habitsStore = transaction.objectStore('habits');
+            habitsStore.clear();
+            habits.forEach(habit => {
+                habitsStore.put(habit);
+            });
+            
+            const trackingStore = transaction.objectStore('trackingData');
+            trackingStore.clear();
+            for (let w in trackingData) {
+                for (let d in trackingData[w]) {
+                    for (let h in trackingData[w][d]) {
+                        trackingStore.put({
+                            week: parseInt(w),
+                            day: parseInt(d),
+                            habitId: parseInt(h),
+                            completed: trackingData[w][d][h]
+                        });
+                    }
+                }
+            }
+            
+            const metadataStore = transaction.objectStore('metadata');
+            metadataStore.put({ key: 'totalWeeks', value: totalWeeks });
+            metadataStore.put({ key: 'lastUpdated', value: new Date().toISOString() });
+        }
+
+        // Load data from IndexedDB
+        function loadFromDatabase() {
+            return new Promise((resolve) => {
+                if (!db) {
+                    resolve();
+                    return;
+                }
+                
+                const transaction = db.transaction(['habits', 'trackingData', 'metadata'], 'readonly');
+                
+                const habitsStore = transaction.objectStore('habits');
+                habitsStore.getAll().onsuccess = (event) => {
+                    if (event.target.result.length > 0) {
+                        habits = event.target.result;
+                    }
+                };
+                
+                const trackingStore = transaction.objectStore('trackingData');
+                trackingStore.getAll().onsuccess = (event) => {
+                    trackingData = {};
+                    event.target.result.forEach(record => {
+                        const w = record.week;
+                        const d = record.day;
+                        const h = record.habitId;
+                        
+                        if (!trackingData[w]) trackingData[w] = {};
+                        if (!trackingData[w][d]) trackingData[w][d] = {};
+                        trackingData[w][d][h] = record.completed;
+                    });
+                };
+                
+                const metadataStore = transaction.objectStore('metadata');
+                metadataStore.get('totalWeeks').onsuccess = (event) => {
+                    if (event.target.result) {
+                        totalWeeks = event.target.result.value;
+                    }
+                };
+                
+                transaction.oncomplete = () => {
+                    resolve();
+                };
+            });
+        }
+
+        // Page Navigation
+        function switchPage(pageName) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(pageName).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (pageName === 'yearly') {
+                renderYearlyTracker();
+                setTimeout(renderWeeklyTrendChart, 100);
+            }
+        }
+
+        // Week dates tracking - starts Dec 27, 2025 (Saturday)
+        function initializeWeekDates() {
+            const startDate = new Date(2025, 11, 27);
+            
+            for (let w = 1; w <= totalWeeks; w++) {
+                const weekStart = new Date(startDate);
+                weekStart.setDate(weekStart.getDate() + (w - 1) * 7);
+                
+                const weekEnd = new Date(weekStart);
+                weekEnd.setDate(weekEnd.getDate() + 6);
+                
+                weekDates[w] = {
+                    startDate: formatDate(weekStart),
+                    endDate: formatDate(weekEnd),
+                    startMonth: weekStart.getMonth() + 1,
+                    endMonth: weekEnd.getMonth() + 1,
+                    startYear: weekStart.getFullYear(),
+                    endYear: weekEnd.getFullYear(),
+                    startDateObj: weekStart,
+                    endDateObj: weekEnd
+                };
+            }
+        }
+
+        function formatDate(date) {
+            const day = date.getDate();
+            const month = date.toLocaleString('default', { month: 'short' });
+            const year = date.getFullYear();
+            const dayName = date.toLocaleString('default', { weekday: 'short' });
+            return `${dayName}, ${day} ${month} ${year}`;
+        }
+
+        function getDateRange(week) {
+            if (weekDates[week]) {
+                const startDate = weekDates[week].startDate;
+                const endDate = weekDates[week].endDate;
+                return `${startDate} - ${endDate}`;
+            }
+            return '';
+        }
+
+        // Get week month info
+        function getWeekMonths(week) {
+            if (!weekDates[week]) return '';
+            const startMonth = weekDates[week].startDate.split(',')[0];
+            const endMonth = weekDates[week].endDate.split(' ')[1];
+            
+            if (weekDates[week].startMonth === weekDates[week].endMonth) {
+                return endMonth;
+            }
+            return `${startMonth} - ${endMonth}`;
+        }
+
+        // Render yearly tracker
+        function renderYearlyTracker() {
+            const container = document.getElementById('yearlyContainer');
+            const weeklyRates = getWeeklyCompletionRates();
+            
+            container.innerHTML = Array.from({length: totalWeeks}, (_, i) => {
+                const w = i + 1;
+                const percentage = weeklyRates[i] || 0;
+                
+                let status = 'poor';
+                if (percentage >= 80) status = 'excellent';
+                else if (percentage >= 60) status = 'good';
+                else if (percentage >= 40) status = 'fair';
+                
+                return `
+                    <div class="week-card ${status}">
+                        <div class="week-header">
+                            <div>
+                                <div class="week-title">Week ${w}</div>
+                                <div class="week-month">${getWeekMonths(w)}</div>
+                            </div>
+                        </div>
+                        <div class="week-date-range">${getDateRange(w)}</div>
+                        <div class="week-percentage">${percentage}%</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percentage}%"></div>
+                        </div>
+                        <div class="week-stats">
+                            <div class="stat-item">
+                                <span class="stat-label">Total Habits:</span>
+                                <span class="stat-value">${habits.length}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Completed:</span>
+                                <span class="stat-value">${Math.round((percentage * habits.length * 7) / 100)}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Status:</span>
+                                <span class="stat-value">${status.toUpperCase()}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Initialize on page load
+        async function startApp() {
+            try {
+                await initializeDB();
+                await loadFromDatabase();
+                
+                initializeTrackingData();
+                initializeWeekDates();
+                
+                renderHabits();
+                renderWeeks();
+                updateCharts();
+                renderTopHabits();
+                
+                showNotification('✓ App loaded successfully!', 'success');
+            } catch (error) {
+                console.error('Error loading app:', error);
+                initializeTrackingData();
+                initializeWeekDates();
+                renderHabits();
+                renderWeeks();
+                updateCharts();
+                renderTopHabits();
+            }
+        }
+
+        // Start the app
+        startApp();
+    </script>
+</body>
+</html>
