@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -25,9 +25,9 @@
             background: var(--color-surface);
             border-bottom: 2px solid var(--color-border);
             margin-bottom: 20px;
-            border-radius: 16px 16px 0 0;
+            border-radius: 8px 8px 0 0;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .nav-tab {
@@ -48,7 +48,7 @@
         }
 
         .nav-tab.active {
-            background: linear-gradient(135deg, var(--color-primary) 0%, #1d4ed8 100%);
+            background: var(--color-primary);
             color: white;
         }
 
@@ -69,67 +69,60 @@
             margin: 0 auto;
         }
 
-        .week-card {
-            background: linear-gradient(135deg, var(--color-surface) 0%, rgba(37, 99, 235, 0.02) 100%);
-            border-radius: 16px;
+        .month-card {
+            background: var(--color-surface);
+            border-radius: 12px;
             padding: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(37, 99, 235, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 6px solid var(--color-primary);
         }
 
-        .week-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        .month-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
         }
 
-        .week-card.excellent {
-            border-color: rgba(16, 185, 129, 0.3);
-            background: linear-gradient(135deg, var(--color-surface) 0%, rgba(16, 185, 129, 0.05) 100%);
+        .month-card.excellent {
+            border-left-color: #10b981;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, transparent 100%);
         }
 
-        .week-card.good {
-            border-color: rgba(59, 130, 246, 0.3);
-            background: linear-gradient(135deg, var(--color-surface) 0%, rgba(59, 130, 246, 0.05) 100%);
+        .month-card.good {
+            border-left-color: #3b82f6;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, transparent 100%);
         }
 
-        .week-card.fair {
-            border-color: rgba(245, 158, 11, 0.3);
-            background: linear-gradient(135deg, var(--color-surface) 0%, rgba(245, 158, 11, 0.05) 100%);
+        .month-card.fair {
+            border-left-color: #f59e0b;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, transparent 100%);
         }
 
-        .week-card.poor {
-            border-color: rgba(239, 68, 68, 0.3);
-            background: linear-gradient(135deg, var(--color-surface) 0%, rgba(239, 68, 68, 0.05) 100%);
+        .month-card.poor {
+            border-left-color: #ef4444;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, transparent 100%);
         }
 
-        .week-header {
+        .month-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
         }
 
-        .week-title {
+        .month-name {
             font-size: 18px;
             font-weight: 700;
             color: var(--color-text);
         }
 
-        .week-month {
+        .month-year {
             font-size: 12px;
             color: #999;
             font-weight: 500;
         }
 
-        .week-date-range {
-            font-size: 12px;
-            color: #666;
-            margin: 8px 0;
-            line-height: 1.4;
-        }
-
-        .week-stats {
+        .month-stats {
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -139,9 +132,9 @@
             display: flex;
             justify-content: space-between;
             font-size: 13px;
-            padding: 10px;
+            padding: 8px;
             background: rgba(0, 0, 0, 0.02);
-            border-radius: 8px;
+            border-radius: 6px;
         }
 
         .stat-label {
@@ -156,53 +149,44 @@
 
         .progress-bar {
             width: 100%;
-            height: 6px;
+            height: 8px;
             background: #e5e7eb;
             border-radius: 4px;
             overflow: hidden;
-            margin-top: 12px;
+            margin-top: 10px;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #3b82f6, #10b981);
-            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 4px;
+            background: linear-gradient(90deg, #10b981, #3b82f6);
+            transition: width 0.5s ease;
         }
 
-        .week-percentage {
+        .month-percentage {
             font-size: 32px;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--color-primary) 0%, #1d4ed8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--color-primary);
             text-align: center;
             margin: 15px 0;
             padding: 15px;
             background: rgba(37, 99, 235, 0.08);
-            border-radius: 12px;
+            border-radius: 8px;
         }
 
         .yearly-header {
             grid-column: 1 / -1;
             text-align: center;
-            padding: 30px;
-            background: linear-gradient(135deg, var(--color-surface) 0%, rgba(37, 99, 235, 0.03) 100%);
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            border: 1px solid rgba(37, 99, 235, 0.1);
-            margin-bottom: 20px;
+            padding: 20px;
+            background: var(--color-surface);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
         }
 
         .yearly-header h2 {
-            font-size: 28px;
+            font-size: 24px;
             margin: 0 0 10px 0;
             color: var(--color-text);
-            background: linear-gradient(135deg, var(--color-primary) 0%, #1d4ed8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
         .yearly-header p {
@@ -251,15 +235,14 @@
 
         /* Left Panel - Daily Habits */
         .habits-panel {
-            background: linear-gradient(135deg, var(--color-surface) 0%, rgba(37, 99, 235, 0.02) 100%);
-            border-radius: 16px;
+            background: var(--color-surface);
+            border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             max-height: 600px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            border: 1px solid rgba(37, 99, 235, 0.1);
         }
 
         .habits-panel h2 {
@@ -267,10 +250,6 @@
             font-weight: 600;
             margin-bottom: 15px;
             color: var(--color-text);
-            background: linear-gradient(135deg, var(--color-primary) 0%, #1d4ed8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
         .habits-list-container {
@@ -284,19 +263,27 @@
             align-items: center;
             padding: 12px;
             margin-bottom: 10px;
-            border-radius: 10px;
-            background: #f8f9fa;
-            transition: all 0.2s;
+            border-radius: 6px;
+            background: #f5f5f5;
+            transition: background 0.2s;
             font-size: 13px;
             position: relative;
             user-select: none;
             gap: 10px;
-            border: 1px solid transparent;
         }
 
         .habit-item:hover {
-            background: #f0f1f3;
-            border-color: rgba(37, 99, 235, 0.1);
+            background: #efefef;
+        }
+
+        .habit-item.context-menu-open {
+            background: #e8e8e8;
+        }
+
+        .habit-icon {
+            font-size: 20px;
+            margin-right: 10px;
+            min-width: 24px;
         }
 
         .habit-name {
@@ -309,11 +296,11 @@
             background: #ff4757;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 4px;
             padding: 6px 10px;
             font-size: 12px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: background 0.2s;
             font-weight: 600;
             white-space: nowrap;
             flex-shrink: 0;
@@ -323,14 +310,45 @@
             background: #ee5a6f;
         }
 
+        .context-menu {
+            position: absolute;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1001;
+            min-width: 150px;
+        }
+
+        .context-menu-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--color-text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .context-menu-item:hover {
+            background: var(--color-light-blue);
+        }
+
+        .context-menu-item.delete {
+            color: #ff4757;
+        }
+
+        .context-menu-item.delete:hover {
+            background: rgba(255, 71, 87, 0.1);
+        }
+
         /* Middle Panel - Weekly Tracking Grid */
         .tracking-grid-panel {
-            background: linear-gradient(135deg, var(--color-surface) 0%, rgba(37, 99, 235, 0.02) 100%);
-            border-radius: 16px;
+            background: var(--color-surface);
+            border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             overflow-x: auto;
-            border: 1px solid rgba(37, 99, 235, 0.1);
         }
 
         .tracking-grid-panel h2 {
@@ -338,10 +356,6 @@
             font-weight: 600;
             margin-bottom: 15px;
             color: var(--color-text);
-            background: linear-gradient(135deg, var(--color-primary) 0%, #1d4ed8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
         .weeks-container {
@@ -356,7 +370,7 @@
             min-width: 350px;
         }
 
-        .week-header-table {
+        .week-header {
             font-size: 13px;
             font-weight: 600;
             color: var(--color-primary);
@@ -365,13 +379,21 @@
             letter-spacing: 0.5px;
         }
 
-        .week-dates-header {
+        .week-dates {
             font-size: 11px;
             color: #999;
             font-weight: 400;
             text-transform: none;
             letter-spacing: 0;
             margin-top: 3px;
+        }
+
+        .day-header {
+            font-size: 10px;
+            color: #666;
+            font-weight: 600;
+            padding: 4px 0;
+            border-bottom: 1px solid #f0f0f0;
         }
 
         .tracking-table {
@@ -381,15 +403,15 @@
         }
 
         .tracking-table thead {
-            background: linear-gradient(180deg, rgba(37, 99, 235, 0.1) 0%, transparent 100%);
+            background: var(--color-light-blue);
         }
 
         .tracking-table th {
-            padding: 10px 4px;
+            padding: 8px 4px;
             text-align: center;
             font-weight: 600;
             color: var(--color-text);
-            border-bottom: 2px solid rgba(37, 99, 235, 0.2);
+            border-bottom: 1px solid var(--color-border);
             font-size: 11px;
         }
 
@@ -416,6 +438,10 @@
             accent-color: var(--color-success);
         }
 
+        .checkbox:checked {
+            accent-color: var(--color-success);
+        }
+
         /* Right Panel - Analytics */
         .analytics-panel {
             display: flex;
@@ -424,63 +450,49 @@
         }
 
         .chart-card {
-            background: linear-gradient(135deg, var(--color-surface) 0%, rgba(37, 99, 235, 0.02) 100%);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            border: 1px solid rgba(37, 99, 235, 0.1);
+            background: var(--color-surface);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .chart-card h3 {
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
             color: var(--color-text);
-            background: linear-gradient(135deg, var(--color-primary) 0%, #1d4ed8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
         .chart-container {
             position: relative;
-            height: 280px;
-            background: linear-gradient(180deg, rgba(37, 99, 235, 0.05) 0%, transparent 100%);
-            border-radius: 12px;
-            padding: 15px;
+            height: 250px;
+        }
+
+        .small-chart-container {
+            position: relative;
+            height: 200px;
         }
 
         .progress-card {
-            background: linear-gradient(135deg, var(--color-surface) 0%, rgba(16, 185, 129, 0.02) 100%);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            border: 1px solid rgba(16, 185, 129, 0.1);
+            background: var(--color-surface);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .progress-card h3 {
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
             color: var(--color-text);
-            background: linear-gradient(135deg, var(--color-success) 0%, #059669 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
         .top-habit {
             display: flex;
             align-items: center;
-            padding: 12px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 8px 0;
+            border-bottom: 1px solid var(--color-border);
             font-size: 13px;
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
-
-        .top-habit:hover {
-            background: rgba(37, 99, 235, 0.05);
         }
 
         .top-habit:last-child {
@@ -488,18 +500,17 @@
         }
 
         .habit-rank {
-            background: linear-gradient(135deg, var(--color-primary) 0%, #1d4ed8 100%);
+            background: var(--color-primary);
             color: white;
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
-            margin-right: 12px;
+            font-weight: 600;
+            margin-right: 10px;
             font-size: 12px;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
 
         .habit-name-progress {
@@ -509,8 +520,30 @@
 
         .habit-completion {
             color: var(--color-primary);
-            font-weight: 700;
+            font-weight: 600;
             font-size: 12px;
+        }
+
+        .month-progress {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: var(--color-light-blue);
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .month-progress-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .month-progress-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-primary);
         }
 
         .button-group {
@@ -530,11 +563,17 @@
             flex: 1;
             padding: 10px 15px;
             border: none;
-            border-radius: 10px;
+            border-radius: 6px;
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
+        }
+
+        .btn-sm {
+            padding: 8px 12px;
+            font-size: 12px;
+            flex: 1;
         }
 
         .btn-icon {
@@ -547,24 +586,21 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--color-primary) 0%, #1d4ed8 100%);
+            background: var(--color-primary);
             color: white;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+            background: #1d4ed8;
         }
 
         .btn-secondary {
-            background: linear-gradient(135deg, var(--color-light-blue) 0%, rgba(37, 99, 235, 0.1) 100%);
+            background: var(--color-light-blue);
             color: var(--color-primary);
-            border: 1px solid rgba(37, 99, 235, 0.2);
         }
 
         .btn-secondary:hover {
-            background: linear-gradient(135deg, #bfdbfe 0%, rgba(37, 99, 235, 0.15) 100%);
+            background: #bfdbfe;
         }
 
         .form-group {
@@ -582,19 +618,11 @@
 
         .form-group input,
         .form-group textarea {
-            padding: 10px 12px;
-            border: 1px solid rgba(37, 99, 235, 0.2);
-            border-radius: 10px;
+            padding: 8px 12px;
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
             font-size: 13px;
             font-family: inherit;
-            transition: all 0.2s;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--color-primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .modal {
@@ -616,12 +644,11 @@
 
         .modal-content {
             background: var(--color-surface);
-            border-radius: 16px;
+            border-radius: 8px;
             padding: 25px;
             max-width: 400px;
             width: 90%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-            border: 1px solid rgba(37, 99, 235, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         }
 
         .modal-header {
@@ -636,7 +663,6 @@
             font-size: 24px;
             cursor: pointer;
             color: #999;
-            transition: color 0.2s;
         }
 
         .modal-close:hover {
@@ -649,22 +675,26 @@
             top: 20px;
             right: 20px;
             padding: 16px 20px;
-            border-radius: 12px;
+            border-radius: 8px;
             color: white;
             font-size: 14px;
             font-weight: 600;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             z-index: 2000;
             animation: slideIn 0.3s ease, slideOut 0.3s ease 2.7s forwards;
             max-width: 300px;
         }
 
         .notification.success {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: #10b981;
         }
 
         .notification.error {
-            background: linear-gradient(135deg, #ff4757 0%, #ee5a6f 100%);
+            background: #ff4757;
+        }
+
+        .notification.info {
+            background: #2563eb;
         }
 
         @keyframes slideIn {
@@ -716,7 +746,8 @@
                 padding: 15px;
             }
 
-            .chart-container {
+            .chart-container,
+            .small-chart-container {
                 height: 200px;
             }
         }
@@ -738,42 +769,13 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #999;
         }
-
-        .yearly-chart-card {
-            grid-column: 1 / -1;
-            background: linear-gradient(135deg, var(--color-surface) 0%, rgba(37, 99, 235, 0.02) 100%);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            border: 1px solid rgba(37, 99, 235, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .yearly-chart-card h3 {
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: var(--color-text);
-            background: linear-gradient(135deg, var(--color-primary) 0%, #1d4ed8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .yearly-chart-container {
-            position: relative;
-            height: 350px;
-            background: linear-gradient(180deg, rgba(37, 99, 235, 0.05) 0%, transparent 100%);
-            border-radius: 12px;
-            padding: 15px;
-        }
     </style>
 </head>
 <body>
     <!-- Navigation Bar -->
     <div class="navbar">
         <button class="nav-tab active" onclick="switchPage('daily')">📊 Daily Tracker</button>
-        <button class="nav-tab" onclick="switchPage('yearly')">📈 Weekly Reports</button>
+        <button class="nav-tab" onclick="switchPage('yearly')">📈 Yearly Tracker</button>
     </div>
 
     <!-- Daily Tracker Page -->
@@ -808,43 +810,37 @@
         <!-- Right Panel - Analytics -->
         <div class="analytics-panel">
             <div class="chart-card">
-                <h3>📈 Weekly Progress Trend</h3>
-                <div class="chart-container">
-                    <canvas id="weeklyAreaChart"></canvas>
+                <h3>Monthly Progress</h3>
+                <div class="month-progress">
+                    <div class="month-progress-label">Overall Completion</div>
+                    <div class="month-progress-value" id="monthlyPercentage">0%</div>
+                </div>
+                <div class="small-chart-container">
+                    <canvas id="trendChart"></canvas>
                 </div>
             </div>
 
             <div class="chart-card">
-                <h3>📊 Weekly Completion Rates</h3>
+                <h3>Weekly Completion Rates</h3>
                 <div class="chart-container">
                     <canvas id="barChart"></canvas>
                 </div>
             </div>
 
             <div class="progress-card">
-                <h3>🏆 Top 10 Daily Habits</h3>
+                <h3>Top 10 Daily Habits</h3>
                 <div id="topHabits"></div>
             </div>
         </div>
     </div>
     </div>
 
-    <!-- Weekly Reports Page -->
+    <!-- Yearly Tracker Page -->
     <div id="yearly" class="page">
         <div class="yearly-header">
-            <h2>📊 Weekly Progress Reports</h2>
-            <p>Track your weekly completion rates and habit performance</p>
+            <h2>📅 Yearly Habits Progress</h2>
+            <p>Your monthly completion rates from December 2025 onwards</p>
         </div>
-
-        <div style="grid-column: 1 / -1; max-width: 2000px; margin: 0 auto 20px; width: 100%;">
-            <div class="yearly-chart-card">
-                <h3>📈 Weekly Trend Analysis</h3>
-                <div class="yearly-chart-container">
-                    <canvas id="weeklyTrendChart"></canvas>
-                </div>
-            </div>
-        </div>
-
         <div class="yearly-container" id="yearlyContainer"></div>
     </div>
 
@@ -914,7 +910,6 @@
         let trackingData = {};
         let totalWeeks = 5;
         let weekDates = {};
-        let weeklyAreaChart, barChart, weeklyTrendChart;
 
         // Initialize tracking data
         function initializeTrackingData() {
@@ -946,8 +941,8 @@
                     return `
                     <div class="habit-item">
                         <span class="habit-name">${habit.name}</span>
-                        <button class="habit-delete-btn" style="background: #3498db;" onclick="openEditHabitModal(${habit.id}, '${escapedName}')">✏️</button>
-                        <button class="habit-delete-btn" onclick="deleteHabit(${habit.id}, '${escapedName}')">🗑️</button>
+                        <button class="habit-delete-btn" style="background: #3498db; margin-right: 5px;" onclick="openEditHabitModal(${habit.id}, '${escapedName}')">✏️ Edit</button>
+                        <button class="habit-delete-btn" onclick="deleteHabit(${habit.id}, '${escapedName}')">🗑️ Delete</button>
                     </div>
                     `;
                 }).join('');
@@ -966,7 +961,7 @@
                 const dayNames = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 
                 let tableHTML = `
-                    <div class="week-header-table">Week ${w}<div class="week-dates-header">${getDateRange(w)}</div></div>
+                    <div class="week-header">Week ${w}<div class="week-dates">${getDateRange(w)}</div></div>
                     <table class="tracking-table">
                         <thead>
                             <tr>
@@ -1007,7 +1002,15 @@
             trackingData[week][day][habitId] = !trackingData[week][day][habitId];
             updateCharts();
             renderTopHabits();
-            saveToDatabase();
+        }
+
+        // Toggle habit completion for today
+        function toggleHabitComplete(habitId) {
+            const today = new Date().getDay() || 7;
+            trackingData[currentWeekStart][today][habitId] = !trackingData[currentWeekStart][today][habitId];
+            renderWeeks();
+            updateCharts();
+            renderTopHabits();
         }
 
         // Week navigation
@@ -1015,13 +1018,15 @@
             if (currentWeekStart > 1) {
                 currentWeekStart--;
                 renderWeeks();
+                saveToDatabase();
             }
         }
 
         function nextWeek() {
-            if (currentWeekStart < totalWeeks - 2) {
+            if (currentWeekStart < totalWeeks - 1) {
                 currentWeekStart++;
                 renderWeeks();
+                saveToDatabase();
             }
         }
 
@@ -1031,6 +1036,7 @@
             const weeks = totalWeeks;
             const days = 7;
             
+            // Initialize tracking for new week with all unchecked
             trackingData[weeks] = {};
             for (let d = 1; d <= days; d++) {
                 trackingData[weeks][d] = {};
@@ -1039,13 +1045,33 @@
                 });
             }
             
+            // Initialize dates for new week
             initializeWeekDates();
+            
             renderWeeks();
             updateCharts();
             renderTopHabits();
             closeAddWeekModal();
-            saveToDatabase();
             showNotification(`✓ Week ${weeks} added (${getDateRange(weeks)})!`, 'success');
+        }
+
+        // Calculate overall monthly percentage
+        function calculateMonthlyPercentage() {
+            let totalCompleted = 0;
+            let totalPossible = 0;
+
+            for (let w = 1; w <= 5; w++) {
+                for (let d = 1; d <= 7; d++) {
+                    habits.forEach(habit => {
+                        totalPossible++;
+                        if (trackingData[w][d][habit.id]) {
+                            totalCompleted++;
+                        }
+                    });
+                }
+            }
+
+            return Math.round((totalCompleted / totalPossible) * 100);
         }
 
         // Calculate completion rates per week
@@ -1071,7 +1097,7 @@
         function getTopHabits() {
             const habitScores = {};
             habits.forEach(habit => {
-                habitScores[habit.id] = { name: habit.name, completed: 0, total: 0 };
+                habitScores[habit.id] = { name: habit.name, icon: habit.icon, completed: 0, total: 0 };
             });
 
             for (let w = 1; w <= totalWeeks; w++) {
@@ -1108,74 +1134,34 @@
         }
 
         // Update charts
+        let trendChart, barChart;
+
         function updateCharts() {
+            const monthlyPercentage = calculateMonthlyPercentage();
+            document.getElementById('monthlyPercentage').textContent = monthlyPercentage + '%';
+
             const weeklyRates = getWeeklyCompletionRates();
 
-            // Weekly Area Chart
-            if (weeklyAreaChart) weeklyAreaChart.destroy();
-            const weeklyCtx = document.getElementById('weeklyAreaChart').getContext('2d');
-            const weekLabels = Array.from({length: totalWeeks}, (_, i) => `W${i + 1}`);
-            
-            const gradient = weeklyCtx.createLinearGradient(0, 0, 0, 280);
-            gradient.addColorStop(0, 'rgba(37, 99, 235, 0.3)');
-            gradient.addColorStop(1, 'rgba(37, 99, 235, 0)');
-            
-            weeklyAreaChart = new Chart(weeklyCtx, {
+            // Trend Chart
+            if (trendChart) trendChart.destroy();
+            const trendCtx = document.getElementById('trendChart').getContext('2d');
+            const trendLabels = Array.from({length: totalWeeks}, (_, i) => `Week ${i + 1}`);
+            trendChart = new Chart(trendCtx, {
                 type: 'line',
                 data: {
-                    labels: weekLabels,
+                    labels: trendLabels,
                     datasets: [{
                         label: 'Completion Rate %',
                         data: weeklyRates,
                         borderColor: '#2563eb',
-                        backgroundColor: gradient,
-                        borderWidth: 3,
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        borderWidth: 2,
                         fill: true,
                         tension: 0.4,
-                        pointRadius: 5,
+                        pointRadius: 4,
                         pointBackgroundColor: '#2563eb',
                         pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        pointHoverRadius: 7
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        filler: { propagate: true }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 100,
-                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
-                            ticks: { callback: v => v + '%' }
-                        },
-                        x: {
-                            grid: { display: false }
-                        }
-                    }
-                }
-            });
-
-            // Bar Chart
-            if (barChart) barChart.destroy();
-            const barCtx = document.getElementById('barChart').getContext('2d');
-            const barLabels = Array.from({length: totalWeeks}, (_, i) => `W${i + 1}`);
-            barChart = new Chart(barCtx, {
-                type: 'bar',
-                data: {
-                    labels: barLabels,
-                    datasets: [{
-                        label: 'Completion Rate %',
-                        data: weeklyRates,
-                        backgroundColor: 'rgba(37, 99, 235, 0.8)',
-                        borderRadius: 8,
-                        borderSkipped: false,
-                        borderColor: 'rgba(37, 99, 235, 1)',
-                        borderWidth: 1
+                        pointBorderWidth: 2
                     }]
                 },
                 options: {
@@ -1188,73 +1174,38 @@
                         y: {
                             beginAtZero: true,
                             max: 100,
-                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
                             ticks: { callback: v => v + '%' }
-                        },
-                        x: {
-                            grid: { display: false }
                         }
                     }
                 }
             });
-        }
 
-        // Render weekly trend chart
-        function renderWeeklyTrendChart() {
-            const weeklyRates = getWeeklyCompletionRates();
-            
-            if (weeklyTrendChart) weeklyTrendChart.destroy();
-            const ctx = document.getElementById('weeklyTrendChart').getContext('2d');
-            
-            const labels = Array.from({length: totalWeeks}, (_, i) => `Week ${i + 1}`);
-            
-            const gradient = ctx.createLinearGradient(0, 0, 0, 350);
-            gradient.addColorStop(0, 'rgba(37, 99, 235, 0.3)');
-            gradient.addColorStop(0.5, 'rgba(16, 185, 129, 0.2)');
-            gradient.addColorStop(1, 'rgba(37, 99, 235, 0)');
-            
-            weeklyTrendChart = new Chart(ctx, {
-                type: 'line',
+            // Bar Chart
+            if (barChart) barChart.destroy();
+            const barCtx = document.getElementById('barChart').getContext('2d');
+            const barLabels = Array.from({length: totalWeeks}, (_, i) => `Week ${i + 1}`);
+            barChart = new Chart(barCtx, {
+                type: 'bar',
                 data: {
-                    labels: labels,
+                    labels: barLabels,
                     datasets: [{
-                        label: 'Weekly Completion %',
+                        label: 'Completion Rate %',
                         data: weeklyRates,
-                        borderColor: '#2563eb',
-                        backgroundColor: gradient,
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: 6,
-                        pointBackgroundColor: '#2563eb',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        pointHoverRadius: 8,
-                        pointHoverBackgroundColor: '#1d4ed8'
+                        backgroundColor: '#2563eb',
+                        borderRadius: 4
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            padding: 12,
-                            titleFont: { size: 14, weight: 'bold' },
-                            bodyFont: { size: 13 },
-                            cornerRadius: 8
-                        }
+                        legend: { display: false }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
                             max: 100,
-                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
                             ticks: { callback: v => v + '%' }
-                        },
-                        x: {
-                            grid: { display: false }
                         }
                     }
                 }
@@ -1269,6 +1220,8 @@
         function closeAddHabitModal() {
             document.getElementById('addHabitModal').classList.remove('active');
             document.getElementById('habitNameInput').value = '';
+            document.getElementById('habitIconInput').value = '';
+            document.getElementById('habitGoalInput').value = '30';
         }
 
         function addHabit() {
@@ -1282,6 +1235,7 @@
             const newId = habits.length > 0 ? Math.max(...habits.map(h => h.id)) + 1 : 1;
             habits.push({ id: newId, name });
 
+            // Initialize tracking for new habit across all weeks
             for (let w = 1; w <= totalWeeks; w++) {
                 for (let d = 1; d <= 7; d++) {
                     if (!trackingData[w]) trackingData[w] = {};
@@ -1295,17 +1249,22 @@
             updateCharts();
             renderTopHabits();
             closeAddHabitModal();
-            saveToDatabase();
             showNotification(`✓ "${name}" added!`, 'success');
         }
 
         // Delete habit with confirmation
         function deleteHabit(habitId, habitName) {
+            // Unescape the habit name properly
             const displayName = habitName.replace(/\\'/g, "'");
             
             if (confirm(`Are you sure you want to delete "${displayName}"?`)) {
-                habits = habits.filter(h => h.id !== habitId);
+                console.log('Deleting habit:', habitId, displayName);
                 
+                // Remove from habits array
+                habits = habits.filter(h => h.id !== habitId);
+                console.log('Habits after filter:', habits.length);
+                
+                // Remove from tracking data across ALL weeks
                 for (let w = 1; w <= totalWeeks; w++) {
                     if (trackingData[w]) {
                         for (let d = 1; d <= 7; d++) {
@@ -1316,11 +1275,11 @@
                     }
                 }
                 
+                // Re-render everything in correct order
                 renderHabits();
                 renderWeeks();
                 updateCharts();
                 renderTopHabits();
-                saveToDatabase();
                 showNotification(`✓ "${displayName}" deleted!`, 'success');
             }
         }
@@ -1359,7 +1318,6 @@
                 updateCharts();
                 renderTopHabits();
                 closeEditHabitModal();
-                saveToDatabase();
                 showNotification(`✓ "${oldName}" → "${newName}"!`, 'success');
             }
         }
@@ -1379,6 +1337,7 @@
             notification.className = `notification ${type}`;
             notification.textContent = message;
             
+            // Append to body safely
             if (document.body) {
                 document.body.appendChild(notification);
                 setTimeout(() => {
@@ -1408,6 +1367,7 @@
                 request.onupgradeneeded = (event) => {
                     db = event.target.result;
                     
+                    // Create object stores
                     if (!db.objectStoreNames.contains('habits')) {
                         db.createObjectStore('habits', { keyPath: 'id' });
                     }
@@ -1427,12 +1387,14 @@
             
             const transaction = db.transaction(['habits', 'trackingData', 'metadata'], 'readwrite');
             
+            // Save habits
             const habitsStore = transaction.objectStore('habits');
             habitsStore.clear();
             habits.forEach(habit => {
                 habitsStore.put(habit);
             });
             
+            // Save tracking data
             const trackingStore = transaction.objectStore('trackingData');
             trackingStore.clear();
             for (let w in trackingData) {
@@ -1448,8 +1410,10 @@
                 }
             }
             
+            // Save metadata
             const metadataStore = transaction.objectStore('metadata');
             metadataStore.put({ key: 'totalWeeks', value: totalWeeks });
+            metadataStore.put({ key: 'currentWeekStart', value: currentWeekStart });
             metadataStore.put({ key: 'lastUpdated', value: new Date().toISOString() });
         }
 
@@ -1463,6 +1427,7 @@
                 
                 const transaction = db.transaction(['habits', 'trackingData', 'metadata'], 'readonly');
                 
+                // Load habits
                 const habitsStore = transaction.objectStore('habits');
                 habitsStore.getAll().onsuccess = (event) => {
                     if (event.target.result.length > 0) {
@@ -1470,6 +1435,7 @@
                     }
                 };
                 
+                // Load tracking data
                 const trackingStore = transaction.objectStore('trackingData');
                 trackingStore.getAll().onsuccess = (event) => {
                     trackingData = {};
@@ -1484,10 +1450,16 @@
                     });
                 };
                 
+                // Load metadata
                 const metadataStore = transaction.objectStore('metadata');
                 metadataStore.get('totalWeeks').onsuccess = (event) => {
                     if (event.target.result) {
                         totalWeeks = event.target.result.value;
+                    }
+                };
+                metadataStore.get('currentWeekStart').onsuccess = (event) => {
+                    if (event.target.result) {
+                        currentWeekStart = event.target.result.value;
                     }
                 };
                 
@@ -1499,26 +1471,31 @@
 
         // Page Navigation
         function switchPage(pageName) {
+            // Hide all pages
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
             });
             
+            // Deactivate all tabs
             document.querySelectorAll('.nav-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
             
+            // Show selected page
             document.getElementById(pageName).classList.add('active');
+            
+            // Activate selected tab
             event.target.classList.add('active');
             
+            // Render yearly if switching to yearly
             if (pageName === 'yearly') {
                 renderYearlyTracker();
-                setTimeout(renderWeeklyTrendChart, 100);
             }
         }
 
         // Week dates tracking - starts Dec 27, 2025 (Saturday)
         function initializeWeekDates() {
-            const startDate = new Date(2025, 11, 27);
+            const startDate = new Date(2025, 11, 27); // Dec 27, 2025 (Saturday)
             
             for (let w = 1; w <= totalWeeks; w++) {
                 const weekStart = new Date(startDate);
@@ -1557,53 +1534,122 @@
             return '';
         }
 
-        // Get week month info
-        function getWeekMonths(week) {
-            if (!weekDates[week]) return '';
-            const startMonth = weekDates[week].startDate.split(',')[0];
-            const endMonth = weekDates[week].endDate.split(' ')[1];
+        // Calculate monthly progress using dates
+        function getMonthlyProgressByDates() {
+            const monthData = {};
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                              'July', 'August', 'September', 'October', 'November', 'December'];
             
-            if (weekDates[week].startMonth === weekDates[week].endMonth) {
-                return endMonth;
+            for (let w = 1; w <= totalWeeks; w++) {
+                if (!weekDates[w]) continue;
+                
+                const startMonthKey = `${weekDates[w].startMonth}/${weekDates[w].startYear}`;
+                const endMonthKey = `${weekDates[w].endMonth}/${weekDates[w].endYear}`;
+                
+                // Initialize month data for start month
+                if (!monthData[startMonthKey]) {
+                    monthData[startMonthKey] = {
+                        month: monthNames[weekDates[w].startMonth - 1],
+                        monthNum: weekDates[w].startMonth,
+                        year: weekDates[w].startYear,
+                        weeks: [],
+                        completed: 0,
+                        total: 0
+                    };
+                }
+                
+                // Initialize month data for end month (if different)
+                if (endMonthKey !== startMonthKey && !monthData[endMonthKey]) {
+                    monthData[endMonthKey] = {
+                        month: monthNames[weekDates[w].endMonth - 1],
+                        monthNum: weekDates[w].endMonth,
+                        year: weekDates[w].endYear,
+                        weeks: [],
+                        completed: 0,
+                        total: 0
+                    };
+                }
+                
+                monthData[startMonthKey].weeks.push(w);
+                if (endMonthKey !== startMonthKey) {
+                    monthData[endMonthKey].weeks.push(w);
+                }
+                
+                // Count completed habits for this week
+                for (let d = 1; d <= 7; d++) {
+                    if (trackingData[w] && trackingData[w][d]) {
+                        habits.forEach(habit => {
+                            monthData[startMonthKey].total++;
+                            if (endMonthKey !== startMonthKey) {
+                                monthData[endMonthKey].total++;
+                            }
+                            if (trackingData[w][d][habit.id]) {
+                                monthData[startMonthKey].completed++;
+                                if (endMonthKey !== startMonthKey) {
+                                    monthData[endMonthKey].completed++;
+                                }
+                            }
+                        });
+                    }
+                }
             }
-            return `${startMonth} - ${endMonth}`;
+            
+            return monthData;
+        }
+
+        // Calculate monthly progress (legacy - for backwards compatibility)
+        function getMonthlyProgress() {
+            const monthData = getMonthlyProgressByDates();
+            const sortedMonths = Object.entries(monthData)
+                .sort((a, b) => {
+                    const aDate = new Date(a[1].year, a[1].monthNum - 1);
+                    const bDate = new Date(b[1].year, b[1].monthNum - 1);
+                    return aDate - bDate;
+                })
+                .map(([key, data]) => ({
+                    ...data,
+                    percentage: data.total > 0 ? Math.round((data.completed / data.total) * 100) : 0
+                }));
+            
+            return sortedMonths;
         }
 
         // Render yearly tracker
         function renderYearlyTracker() {
+            const monthlyData = getMonthlyProgress();
             const container = document.getElementById('yearlyContainer');
-            const weeklyRates = getWeeklyCompletionRates();
             
-            container.innerHTML = Array.from({length: totalWeeks}, (_, i) => {
-                const w = i + 1;
-                const percentage = weeklyRates[i] || 0;
-                
+            container.innerHTML = monthlyData.map(month => {
+                const percentage = month.total > 0 ? Math.round((month.completed / month.total) * 100) : 0;
                 let status = 'poor';
                 if (percentage >= 80) status = 'excellent';
                 else if (percentage >= 60) status = 'good';
                 else if (percentage >= 40) status = 'fair';
                 
+                // Get date ranges from weeks
+                const weekRanges = month.weeks.map(w => getDateRange(w)).join(', ');
+                
                 return `
-                    <div class="week-card ${status}">
-                        <div class="week-header">
+                    <div class="month-card ${status}">
+                        <div class="month-header">
                             <div>
-                                <div class="week-title">Week ${w}</div>
-                                <div class="week-month">${getWeekMonths(w)}</div>
+                                <div class="month-name">${month.month}</div>
+                                <div class="month-year">${month.year}</div>
                             </div>
                         </div>
-                        <div class="week-date-range">${getDateRange(w)}</div>
-                        <div class="week-percentage">${percentage}%</div>
+                        <div style="font-size: 11px; color: #999; margin-bottom: 10px; text-align: center;">${weekRanges}</div>
+                        <div class="month-percentage">${percentage}%</div>
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: ${percentage}%"></div>
                         </div>
-                        <div class="week-stats">
+                        <div class="month-stats">
                             <div class="stat-item">
                                 <span class="stat-label">Total Habits:</span>
                                 <span class="stat-value">${habits.length}</span>
                             </div>
                             <div class="stat-item">
-                                <span class="stat-label">Completed:</span>
-                                <span class="stat-value">${Math.round((percentage * habits.length * 7) / 100)}</span>
+                                <span class="stat-label">Completed Days:</span>
+                                <span class="stat-value">${Math.round(month.completed / habits.length)}</span>
                             </div>
                             <div class="stat-item">
                                 <span class="stat-label">Status:</span>
@@ -1615,15 +1661,19 @@
             }).join('');
         }
 
-        // Initialize on page load
+        // Initialize on page load - CRITICAL ORDER
         async function startApp() {
             try {
                 await initializeDB();
                 await loadFromDatabase();
                 
+                // Initialize missing tracking data
                 initializeTrackingData();
+                
+                // Initialize week dates (CRITICAL - must be after totalWeeks is set)
                 initializeWeekDates();
                 
+                // Render UI
                 renderHabits();
                 renderWeeks();
                 updateCharts();
@@ -1632,6 +1682,7 @@
                 showNotification('✓ App loaded successfully!', 'success');
             } catch (error) {
                 console.error('Error loading app:', error);
+                // Fallback to in-memory if DB fails
                 initializeTrackingData();
                 initializeWeekDates();
                 renderHabits();
@@ -1640,6 +1691,25 @@
                 renderTopHabits();
             }
         }
+
+        // Modified save calls - auto-save after every action
+        const originalRenderHabits = renderHabits;
+        renderHabits = function() {
+            originalRenderHabits();
+            saveToDatabase();
+        };
+
+        const originalToggleTracking = toggleTracking;
+        toggleTracking = function(week, day, habitId) {
+            originalToggleTracking(week, day, habitId);
+            saveToDatabase();
+        };
+
+        const originalAddWeek = addWeek;
+        addWeek = function() {
+            originalAddWeek();
+            saveToDatabase();
+        };
 
         // Start the app
         startApp();
